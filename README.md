@@ -22,6 +22,7 @@ This is a RESTful API built using Flask for a basic blogging platform. Users can
 - Insomnia / curl for testing  
 
 
+
 Setup Instructions
 ```bash
 git clone https://github.com/yourusername/your-flask-api.git
@@ -96,6 +97,28 @@ This project is Docker-ready and can be deployed using platforms like:
 - Render
 - Heroku (with workaround)
 
-Author
-Built by Charles Battle as part of a Nucamp coding portfolio project.
+...
 
+## Deployment
+
+This project is Docker-ready and can be deployed using platforms like:
+
+- Azure
+- Railway
+- Render
+- Heroku (with workaround)
+
+## What I Built
+
+### 1. JWT Authentication  
+I used `Flask-JWT-Extended` to implement secure token-based login. When users log in, they receive a JWT token, which must be included in headers for accessing protected routes. This ensures stateless, scalable, and secure session handling.
+
+### 2. CRUD Operations (Posts)  
+I created full CRUD functionality for blog posts using Flask routes. Only authenticated users can create, update, or delete their own posts, while anyone can view public posts. I used SQLAlchemy to manage database models and relationships cleanly.
+
+### 3. Docker Setup for Deployment  
+I containerized the app using a `Dockerfile` and `docker-compose.yml` so it can be run consistently on any machine. This makes local testing, CI/CD integration, and cloud deployment (like on Railway or Render) much easier and more reliable.
+
+## Author
+
+Built by Charles Battle as part of a Nucamp coding portfolio project.
