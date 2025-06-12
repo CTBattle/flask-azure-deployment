@@ -1,16 +1,21 @@
+import os
+from datetime import timedelta
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import timedelta
+from dotenv import load_dotenv
+
+# Load environment variables from .env
+load_dotenv()
 
 app = Flask(__name__)
 
-# Configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'  # Use your DB URI here
+# Configuration using environment variables with defaults
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI', 'sqlite:///app.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['JWT_SECRET_KEY'] = 'your-super-secret-key'  # Change this to a secure secret
+app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'super-secret-key')
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=1)
 
 # Initialize extensions
@@ -63,7 +68,6 @@ def login():
     if not user or not user.check_password(data['password']):
         return jsonify({"msg": "Bad username or password"}), 401
     
-    # Use username as identity in JWT token
     access_token = create_access_token(identity=user.username)
     return jsonify(access_token=access_token)
 
@@ -83,7 +87,6 @@ def get_posts():
 @app.route('/posts', methods=['POST'])
 @jwt_required()
 def create_post():
-    # Get username from token
     current_user_username = get_jwt_identity()
     user = User.query.filter_by(username=current_user_username).first()
     if not user:
@@ -106,5 +109,9 @@ def create_post():
         }
     }), 201
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+@app.route('/')
+def home():
+    return "Flask API is running! - Charles Battle"
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8000)
